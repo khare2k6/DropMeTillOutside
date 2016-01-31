@@ -1,5 +1,7 @@
 package com.dmto.user;
 
+import com.dmto.server.IResponseCallback;
+
 /**
  * Created by ankitkha on 11-Dec-15.
  */
@@ -22,8 +24,15 @@ public interface IAuthenticateUser {
     public AUTHENTICATION_ERRORS authenticateThisUser(String myEmail, String code);
 
     /**
+     * User have not yet authenticated email and lost track of authentication email.
+     * This api should re-trigger authentication email to user's email
+     * @param email
+     */
+    public void resendEmailAuthentication(String email, IResponseCallback<String,String>callback);
+    /**
      * Should show user the status of authentication request
      * @param errorState
+     * Todo:Might not be required as using callback now {@link IResponseCallback}
      */
     public void showErrorToUser(AUTHENTICATION_ERRORS errorState);
 

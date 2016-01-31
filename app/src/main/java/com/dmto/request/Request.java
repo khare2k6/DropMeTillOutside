@@ -1,8 +1,9 @@
-package com.dmto.schema;
+package com.dmto.request;
 
 import android.content.Context;
 import android.os.SystemClock;
 
+import com.dmto.user.User;
 import com.dmto.utilities.Utils;
 
 /**
@@ -31,7 +32,7 @@ public class Request {
     private String mUserName;*/
 
     private String mRequestId;
-    //private static Request mInstance;
+
 
     public Request(User user, String destination, long time) {
         mRequester = user;
@@ -41,22 +42,39 @@ public class Request {
         mRequestStartTime = SystemClock.currentThreadTimeMillis();
     }
 
-    /**
-     * Get Currently active request
-     * @return
-     */
-    /*public static Request getActiveRequest() {
-        return mInstance;
-    }*/
-    /*
-     * Creates and returns active request object. By this time , user object should be created and
-     * stored in preferences. Throws NPE if not so.
-     * @param context
-     * @param destination Where user wants to go OR heading to
-     * @param time
-     * @return Request object
-     * @throws NullPointerException
-     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Request request = (Request) o;
+
+        if (mRequestExpiryTime != request.mRequestExpiryTime) return false;
+        if (mRequestStartTime != request.mRequestStartTime) return false;
+        if (!mDestinationArea.equals(request.mDestinationArea)) return false;
+        if (!mRequester.equals(request.mRequester)) return false;
+        return mRequestId.equals(request.mRequestId);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = mDestinationArea.hashCode();
+        result = 31 * result + (int) (mRequestExpiryTime ^ (mRequestExpiryTime >>> 32));
+        result = 31 * result + (int) (mRequestStartTime ^ (mRequestStartTime >>> 32));
+        result = 31 * result + mRequester.hashCode();
+        result = 31 * result + mRequestId.hashCode();
+        return result;
+    }
+    //    /*
+//     * Creates and returns active request object. By this time , user object should be created and
+//     * stored in preferences. Throws NPE if not so.
+//     * @param context
+//     * @param destination Where user wants to go OR heading to
+//     * @param time
+//     * @return Request object
+//     * @throws NullPointerException
+//     */
 //    public static Request getNewRequest(Context context, String destination, long time) throws NullPointerException{
 //        if (mInstance == null) {
 //            User user = User.getmInstance(context);
@@ -74,7 +92,7 @@ public class Request {
 
     /**
      * Get category of this request.
-     * @return {@link com.dmto.schema.User.DMTO_CATEGORY}
+     * @return {@link User.DMTO_CATEGORY}
      */
     public User.DMTO_CATEGORY getDmtoCategoryType() {
         return mRequester.getmVehicleCategory();
@@ -127,6 +145,9 @@ public class Request {
         return mRequester.getmUserName();
     }
 
+    public User getRequester() {
+        return mRequester;
+    }
     /**
      * Returns time(in min) remaining till expiry of this request.
      * @return
@@ -135,4 +156,12 @@ public class Request {
         long timePassedSinceRequestStart = SystemClock.currentThreadTimeMillis() - mRequestStartTime;
         return mRequestExpiryTime - timePassedSinceRequestStart;
     }
+
+    /**
+     * UI component to show new request received
+     */
+    public interface INewRequestListener {
+        public void newRequestReceived(Request request);
+    }
+
 }

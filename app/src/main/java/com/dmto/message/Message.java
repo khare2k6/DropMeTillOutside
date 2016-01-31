@@ -1,12 +1,19 @@
-package com.dmto.schema;
+package com.dmto.message;
+
+import com.dmto.acknowlwdgement.Acknowledgement;
+import com.dmto.request.Request;
+import com.dmto.response.Response;
 
 /**
  * Created by ankitkha on 16-Dec-15.
  */
 public class Message {
     //Sender user name
-    private String mUserName;
+    private String mSenderUserName;
+    private String mReceiverUserName;
     private String mMessage;
+    //Some of the implementation might require channelName or URL for messages to be delivered.
+    private String mChannelName;
     private MessageType mMessageType;
     //In case of location update message, sender's updated latitude
     private String mLatitude;
@@ -17,6 +24,8 @@ public class Message {
     // Response for some request to be sent
     private Response mResponse;
 
+    private Acknowledgement mAck;
+
     /**
      * Constructor when ANNOUCEMENT or CHAT message has to be sent
      * @param userName
@@ -26,28 +35,48 @@ public class Message {
      * @param longitude
      */
     public Message(String userName, String msg, String type, String lat, String longitude) {
-        mUserName = userName;
+        mSenderUserName = userName;
         mMessage = msg;
         mMessageType = MessageType.valueOf(type);
         mLatitude = lat;
         mLongitude = longitude;
     }
 
-    /**
-     * Constructor when REQUEST has to be sent.
-     * @param request
-     */
-    public Message(Request request,Response response,MessageType type) {
-        mMessageType = type;
-        switch (type) {
-            case REQUEST:
-                mRequest = request;
-                break;
+    public Message(Request request) {
+        mSenderUserName = request.getRequesterUserName();
+        mMessageType = MessageType.REQUEST;
+        mRequest = request;
+    }
 
-            case RESPONSE:
-                mResponse = response;
-                break;
-        }
+    public Message(Response response) {
+        mSenderUserName = response.getResponder().getmUserName();
+        mMessageType = MessageType.RESPONSE;
+        mResponse = response;
+    }
+
+
+
+    public Message(Acknowledgement ack) {
+        mAck = ack;
+        mMessageType = MessageType.RESPONSE_ACK;
+        mSenderUserName = ack.getResponse().getResponder().getmUserName();
+
+    }
+
+    public MessageType getmMessageType() {
+        return mMessageType;
+    }
+
+    public Request getmRequest() {
+        return mRequest;
+    }
+
+    public Response getmResponse() {
+        return mResponse;
+    }
+
+    public Acknowledgement getmAck() {
+        return mAck;
     }
     /**
      * Types of messages can be:

@@ -5,7 +5,8 @@ import android.content.SharedPreferences;
 import android.location.Location;
 import android.text.TextUtils;
 
-import com.dmto.user.IUserLogin;
+import com.dmto.user.ILoginLogoutUser;
+import com.dmto.user.User;
 
 /**
  * Created by ankitkha on 11-Dec-15.
@@ -21,6 +22,7 @@ public class PreferenceManager {
     public static final String KEY_USER_EMAIL = "email";
     public static final String KEY_COMPANY_NAME = "companyName";
     public static final String KEY_COMPANY_DOMAIN = "companyDomain";
+    public static final String KEY_TECH_PARK_NAME = "techParkName";
     public static final String KEY_OFFICE_LOCATION = "officeName";
     private static final String KEY_OFFICE_LOCATION_LATITUDE = "officeLatitude";
     private static final String KEY_OFFICE_LOCATION_LONGITUDE = "officeLongitude";
@@ -87,9 +89,9 @@ public class PreferenceManager {
 
     /**
      * Saves the current user state in preferences
-     * @param userState {@link com.dmto.user.IUserLogin.SIGNIN_STATES}
+     * @param userState {@link ILoginLogoutUser.SIGNIN_STATES}
      */
-    public void setCurrentUserState(IUserLogin.SIGNIN_STATES userState) {
+    public void setCurrentUserState(ILoginLogoutUser.SIGNIN_STATES userState) {
         SharedPreferences.Editor editor = mPreferences.edit();
         editor.putString(KEY_USER_STATE, userState.getName());
         editor.commit();
@@ -97,14 +99,14 @@ public class PreferenceManager {
 
     /**
      * Gets the last user state from preferences
-     * @return one of the states from {@link com.dmto.user.IUserLogin.SIGNIN_STATES}
+     * @return one of the states from {@link ILoginLogoutUser.SIGNIN_STATES}
      */
-    public IUserLogin.SIGNIN_STATES getCurrentUserState() {
-        IUserLogin.SIGNIN_STATES currentState = null;
+    public ILoginLogoutUser.SIGNIN_STATES getCurrentUserState() {
+        ILoginLogoutUser.SIGNIN_STATES currentState = null;
         String state = mPreferences.getString(KEY_LOGGED_IN_STATE, BLANK);
 
         if (!TextUtils.isEmpty(state)) {
-            currentState = IUserLogin.SIGNIN_STATES.valueOf(state);
+            currentState = ILoginLogoutUser.SIGNIN_STATES.valueOf(state);
         }
         return currentState;
     }
@@ -176,7 +178,7 @@ public class PreferenceManager {
     }
 
     /**
-     * Sets vehicle number in preferences only if user has selected DMTO category {@link com.dmto.schema.User.DMTO_CATEGORY}
+     * Sets vehicle number in preferences only if user has selected DMTO category {@link User.DMTO_CATEGORY}
      * @param vehicleNumber
      */
     public void setVehicleNumber(String vehicleNumber) {
@@ -261,5 +263,13 @@ public class PreferenceManager {
     }
 
 
+    public void setTechParkName(String mTechParkName) {
+        SharedPreferences.Editor editor = mPreferences.edit();
+        editor.putString(KEY_TECH_PARK_NAME, mTechParkName);
+        editor.commit();
+    }
 
+    public String getTechParkName() {
+        return mPreferences.getString(KEY_TECH_PARK_NAME, BLANK);
+    }
 }

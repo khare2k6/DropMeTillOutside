@@ -1,11 +1,15 @@
 package com.dmto.user;
 
+import com.dmto.server.IResponseCallback;
+
 /**
  * Created by ankitkha on 11-Dec-15.
  */
-public interface IUserLogin {
+public interface ILoginLogoutUser {
 
-    public SIGNIN_STATES loginUser(String uname,String pwd);
+    public void loginUser(String uname, String pwd,
+                                   IResponseCallback<SIGNIN_STATES,SIGNIN_STATES>callback);
+    public void logoutUser();
 
     /**
      * Possible values for user states:
@@ -22,7 +26,9 @@ public interface IUserLogin {
         CODE_VALIDATION_PENDING("CODE_VALIDATION_PENDING"),
         WRONG_PASSWORD("WRONG_PASSWORD"),
         NETWORK_ERROR("NETWORK_ERROR"),
-        SERVER_ERROR("SERVER_ERROR");
+        SERVER_ERROR("SERVER_ERROR"),
+        USERNAME_OR_PASSWORD_INVALID("USERNAME_OR_PASSWORD_INVALID"),
+        SOMETHING_ELSE_WRONG("SOMETHING_WEIRD");
 
         private String mState;
         public String getName(){
