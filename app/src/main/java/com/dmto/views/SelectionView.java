@@ -32,7 +32,7 @@ public class SelectionView extends View {
     float mTextStartX, mTextStartY;
     private List<ISelectionViewClickListenor> mClickListenors;
 
-    int mBackgroundColor, mTextColor, mStrokeColor;
+    int mBackgroundColor,mSelectedBackgroundColor, mTextColor, mStrokeColor;
     Paint mPaintBackgroundColor, mPaintTextColor, mPaintStroke;
     public SelectionView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -49,6 +49,7 @@ public class SelectionView extends View {
             mXPaddingText = a.getInt(R.styleable.SelectionView_xPaddingText,0);
             mYPaddingText = a.getInt(R.styleable.SelectionView_yPaddingText,0);
             mBackgroundColor = a.getColor(R.styleable.SelectionView_backgroundColor, 0);
+            mSelectedBackgroundColor = a.getColor(R.styleable.SelectionView_selectedBackgroundColor, 0);
             mTextColor = a.getColor(R.styleable.SelectionView_textColor, 0);
             mStrokeColor = a.getColor(R.styleable.SelectionView_strokeColor, 0);
             mClickListenors = new ArrayList<ISelectionViewClickListenor>();
@@ -141,8 +142,11 @@ public class SelectionView extends View {
     private int measureWidth(int measureSpec) {
         int size = (int) mTextStartX;
         int textLabelWidthIncludingSpaces = (int) mTextStartX + mWidthLabelOne + mXPaddingText
-                + mXPaddingText + mWidthLabelTwo + mXPaddingText
-                + mXPaddingText + mWidthLabelThree + mXPaddingText;
+                + mXPaddingText + mWidthLabelTwo + mXPaddingText;
+
+        if (mNoOfOptions > 2) {
+            textLabelWidthIncludingSpaces += mXPaddingText + mWidthLabelThree + mXPaddingText;
+        }
 
         size += textLabelWidthIncludingSpaces;
         mRectRightX =  textLabelWidthIncludingSpaces; // this is right corner of rectangle
@@ -191,7 +195,7 @@ public class SelectionView extends View {
 
         switch (mSelectedIndex) {
             case 1: {
-                mPaintBackgroundColor.setColor(Color.GREEN);
+                mPaintBackgroundColor.setColor(mSelectedBackgroundColor);
                 float selectedRectStartX = mRectStartX;
                 float selectedRectEndX = mRectStartX + mXPaddingText + mWidthLabelOne + mXPaddingText;
                 rect = new RectF(selectedRectStartX, mRectStartY, selectedRectEndX, mRectBottomY);
@@ -199,7 +203,7 @@ public class SelectionView extends View {
                 break;
             }
             case 2: {
-                mPaintBackgroundColor.setColor(Color.GREEN);
+                mPaintBackgroundColor.setColor(mSelectedBackgroundColor);
                 float selectedRectStartX = mRectStartX + mXPaddingText + mWidthLabelOne + mXPaddingText;
                 float selectedRectEndX = selectedRectStartX + mXPaddingText +mWidthLabelTwo + mXPaddingText;
                 rect = new RectF(selectedRectStartX, mRectStartY, selectedRectEndX, mRectBottomY);
@@ -207,7 +211,7 @@ public class SelectionView extends View {
                 break;
             }
             case 3:{
-                mPaintBackgroundColor.setColor(Color.GREEN);
+                mPaintBackgroundColor.setColor(mSelectedBackgroundColor);
                 float selectedRectStartX = mRectStartX + mXPaddingText + mWidthLabelOne + mXPaddingText+mXPaddingText+ mWidthLabelTwo + mXPaddingText;
                 float selectedRectEndX = selectedRectStartX + mXPaddingText+mWidthLabelThree + mXPaddingText;
                 rect = new RectF(selectedRectStartX, mRectStartY, selectedRectEndX, mRectBottomY);
@@ -227,9 +231,10 @@ public class SelectionView extends View {
         float verticalSeparatorX = mTextStartX + mWidthLabelOne + mXPaddingText;
         float verticalSeparatorY = mRectBottomY;
         canvas.drawLine(verticalSeparatorX,mRectStartY,verticalSeparatorX,mRectBottomY,mPaintStroke);
-
-        verticalSeparatorX +=  mXPaddingText+ mWidthLabelTwo+ mXPaddingText;
-        canvas.drawLine(verticalSeparatorX,mRectStartY,verticalSeparatorX,mRectBottomY,mPaintStroke);
+        if (mNoOfOptions > 2) {
+            verticalSeparatorX +=  mXPaddingText+ mWidthLabelTwo+ mXPaddingText;
+            canvas.drawLine(verticalSeparatorX,mRectStartY,verticalSeparatorX,mRectBottomY,mPaintStroke);
+        }
     }
 
     public void setOnClickListener(ISelectionViewClickListenor listenor) {

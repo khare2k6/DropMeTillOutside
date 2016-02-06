@@ -20,11 +20,39 @@
         custom:xPaddingText="20"
         custom:yPaddingText="10"
         custom:backgroundColor="@color/colorAccent"
+        custom:selectedBackgroundColor="@color/colorPrimaryLight"
         custom:strokeColor="@android:color/black"
         custom:numberOfOptions="3"
         custom:textSize="45"
         custom:borderStroke="5"
         custom:textColor="@color/colorPrimaryDark"/>
+
+    <TextView
+        android:layout_below="@id/sv_selection"
+        android:layout_marginTop="10dp"
+        android:id="@+id/tv_selected_time"
+        android:text="time"
+        android:textStyle="bold"
+        android:textSize="25sp"
+        android:gravity="center_horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
+
+    <com.dmto.views.TimeSelectionView
+        android:layout_below="@id/tv_selected_time"
+        android:id="@+id/time_selection_view"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        custom:radius_tsv="300"
+        custom:divisionLength="15"
+        custom:numberOfDivision="5"
+        custom:minMarking="12"
+        custom:markingGapDifference="5"
+        custom:strokeColor_tsv="@color/colorPrimaryDark"
+        custom:markingTextSize="25"
+        custom:textColor_tsv="@android:color/black"
+        custom:strokeWidth_tsv="5"
+        />
 
 
 
