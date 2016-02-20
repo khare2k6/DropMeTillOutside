@@ -13,7 +13,7 @@ public interface IAuthenticateUser {
      * @return true if successfully sent.
      * ToDo: Server should send authentication code to user's email, this API probably not needed in client
      */
-    public boolean getAuthenticationCodeToEmail(String userEmail);
+//    public boolean getAuthenticationCodeToEmail(String userEmail);
 
     /**
      * User sends the code to server which is received on his email.
@@ -21,8 +21,12 @@ public interface IAuthenticateUser {
      * @param code sent by server
      * @return one of the possible states of {@link AUTHENTICATION_ERRORS}
      */
-    public AUTHENTICATION_ERRORS authenticateThisUser(String myEmail, String code);
+    public AUTHENTICATION_ERRORS authenticateThisUser(String myEmail, String code, IAuthenticationResult callback);
 
+    public interface IAuthenticationResult {
+        public void onSuccess();
+        public void onFailure(String message);
+    }
     /**
      * User have not yet authenticated email and lost track of authentication email.
      * This api should re-trigger authentication email to user's email

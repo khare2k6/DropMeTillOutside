@@ -179,10 +179,12 @@ public class SelectionView extends View {
                 yStartOfLabel, mPaintTextColor);
 
         //draw 3rd label
-        xStartOfLabel = xStartOfLabel + mWidthLabelTwo + 2 * mXPaddingText;
-        canvas.drawText(mLabelTextThree,
-                xStartOfLabel, //width required by label 2 and some gap after that
-                yStartOfLabel, mPaintTextColor);
+        if (mNoOfOptions > 2) {
+            xStartOfLabel = xStartOfLabel + mWidthLabelTwo + 2 * mXPaddingText;
+            canvas.drawText(mLabelTextThree,
+                    xStartOfLabel, //width required by label 2 and some gap after that
+                    yStartOfLabel, mPaintTextColor);
+        }
     }
 
     private void drawRectangle(Canvas canvas) {

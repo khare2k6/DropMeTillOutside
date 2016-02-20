@@ -42,6 +42,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         mBtnLogIn = (Button) findViewById(R.id.btn_login);
         mBtnSignUp = (Button) findViewById(R.id.btn_signup);
         mTvStatus = (TextView) findViewById(R.id.tv_status);
+        mLoginManager = Factory.getLoginLogoutImplementation(Factory.TYPE.SMACK_XMPP, this);
+        mBtnSignUp.setOnClickListener(this);
+        mBtnLogIn.setOnClickListener(this);
     }
 
     @Override
@@ -50,15 +53,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         if (DmtoApplication.getUser() == null) {
             //first time user opened this application, sign up required
             mTvStatus.setText("Signup required..");
-            mSignupManager = Factory.getSignupImplementation(Factory.TYPE.PARSE);
+            mSignupManager = Factory.getSignupImplementation(Factory.TYPE.SMACK_XMPP);
         } else {
             mTvStatus.setText("User already logged in");
         }
-        mBtnSignUp.setOnClickListener(this);
+
     }
 
     private void showProgressDialog(int message) {
-        mProgressDialog = (ProgressDialog) mProgressDialogBuilder.setTitle(message).create();
+        mProgressDialog = new ProgressDialog(this);
+        mProgressDialog.setTitle("Logging In");
         mProgressDialog.show();
     }
 
@@ -72,6 +76,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private void setStatus(String message) {
         mTvStatus.setText(message);
         clearProgressDialog();
+    }
+
+    private void silentRegisterWithOpenFire(){
+
     }
 
     @Override
@@ -89,6 +97,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         public void onSuccess(IUserSignup.SIGNUP_ERROR_STATES signup_error_states) {
                             Log.d(TAG, "signup:onSuccess:" + signup_error_states);
                             setStatus(signup_error_states.name());
+                            if (signup_error_states.equals(IUserSignup.SIGNUP_ERROR_STATES.NO_ERROR)) {
+                                Log.d(TAG, "move to authntication activity");
+                            }
                         }
 
                         @Override

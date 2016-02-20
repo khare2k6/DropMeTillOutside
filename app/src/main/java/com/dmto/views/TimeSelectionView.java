@@ -67,12 +67,8 @@ public class TimeSelectionView extends View {
         mPaintStroke.setColor(mStrokeColor);
 
         mPaintText = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mPaintStroke.setStyle(Paint.Style.STROKE);
-        mPaintStroke.setStrokeWidth(mStrokeWidth);
-        mPaintStroke.setColor(mStrokeColor);
-        mPaintStroke.setTextAlign(Paint.Align.CENTER);
+        mPaintText.setTextAlign(Paint.Align.CENTER);
         mPaintText.setTextSize(mMarkingTextSize);
-        mRectF = new RectF(getMeasuredWidth()/2 - mRadius, getMeasuredHeight()/2- mRadius, getMeasuredWidth()/2 + mRadius, getMeasuredHeight()/2+ mRadius);
 
     }
 
@@ -85,8 +81,8 @@ public class TimeSelectionView extends View {
     }
 
     private void drawBitmap(Canvas canvas) {
-        RectF rect = new RectF(mCentre.x - 75 / 2, mCentre.y - mRadius, mCentre.x + 75 / 2, mCentre.y);
-        //RectF rect = new RectF(mCentre.x - mBitmap.getWidth()/ 2, mCentre.y - mRadius, mCentre.x + mBitmap.getWidth()/ 2, mCentre.y);
+        //75 is the width of the needle drawable, but on doing drawable.getWidth() it doesn't return the same.
+        RectF rect = new RectF(mCentre.x - mBitmap.getWidth() / 2, mCentre.y - mRadius, mCentre.x + mBitmap.getWidth() / 2, mCentre.y);
 
         canvas.rotate(90-mRotateAngler,mCentre.x,mCentre.y);
         canvas.drawBitmap(mBitmap, null, rect, null);
@@ -138,20 +134,22 @@ public class TimeSelectionView extends View {
         double angle2 = Math.atan2(0, mRadius);
         angleOfIntersection = Math.abs(angle1 - angle2);
         angleOfIntersection = Math.toDegrees(angleOfIntersection);
-        Log.d(TAG, "angle:" + angleOfIntersection);
+//        Log.d(TAG, "angle:" + angleOfIntersection);
         return angleOfIntersection;
     }
 
 
     public int selectedTime(){
-        return (int) (((mRotateAngler)*mMinuteGap*mNumberOfDivision)/180);
+        return (int) Math.round(((mRotateAngler)*mMinuteGap*mNumberOfDivision)/180);
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         setMeasuredDimension(measureWidth(widthMeasureSpec),measureHeight(heightMeasureSpec));
-        mCentre = new Point(getMeasuredWidth()/2 , getMeasuredHeight()/2);
+        mCentre = new Point(getMeasuredWidth() / 2, getMeasuredHeight()-mBitmap.getWidth()/2);
+        mRectF = new RectF(getMeasuredWidth()/2 - mRadius, getMeasuredHeight()- mRadius-mBitmap.getWidth()/2, getMeasuredWidth()/2 + mRadius, getMeasuredHeight()+ mRadius -mBitmap.getWidth()/2);
+
         //mRadius = 200;
     }
 
@@ -163,29 +161,18 @@ public class TimeSelectionView extends View {
 
 
     private int measureHeight(int heightMeasureSpec) {
-        int size = mRadius;
+        int size = mRadius + getPaddingTop()+getPaddingBottom()+mBitmap.getWidth();
         size = resolveSizeAndState(size, heightMeasureSpec, 0);
         return size;
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
-        Point a = new Point(50, 100);
-        Point b = new Point(100, 20);
-        Point c = new Point(150, 100);
-        Path path = new Path();
-        path.moveTo(a.x, a.y);
-        path.lineTo(b.x, b.y);
-        path.lineTo(c.x, c.y);
-        path.close();
-//        canvas.rotate((float) mRotateAngler,50,300);
         drawArc(canvas);
         drawDivisisions(canvas);
         drawBitmap(canvas);
         super.onDraw(canvas);
-
     }
-
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {

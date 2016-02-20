@@ -15,14 +15,14 @@ public class ParseAuthenticateUser implements IAuthenticateUser {
 
     private static final String TAG = ParseAuthenticateUser.class.getSimpleName() ;
 
-    @Override
-    public boolean getAuthenticationCodeToEmail(String userEmail) {
-        // not required as parse, on registering with email,will send authentication email.
-        return false;
-    }
+//    @Override
+//    public boolean getAuthenticationCodeToEmail(String userEmail) {
+//        // not required as parse, on registering with email,will send authentication email.
+//        return false;
+//    }
 
     @Override
-    public AUTHENTICATION_ERRORS authenticateThisUser(String myEmail, String code) {
+    public AUTHENTICATION_ERRORS authenticateThisUser(String myEmail, String code,IAuthenticationResult callback) {
         // not required for parse implementaiton
         return null;
     }

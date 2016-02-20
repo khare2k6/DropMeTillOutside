@@ -28,4 +28,15 @@
         <attr name="markingTextSize" format ="integer"/>
         <attr name="markingGapDifference" format ="integer"/>
     </declare-styleable>
+    
+    <declare-styleable name="CardView">
+        <attr name="showMapView" format="boolean"/>
+        <attr name="showAutoCompleteTextView" format="boolean"/>
+        <attr name="showSelectionView" format="boolean"/>
+        <attr name="showTimerView" format="boolean"/>
+        <attr name="verticalBorderRight" format="boolean"/>
+        <attr name="verticalBorderLeft" format="boolean"/>
+        <attr name="horizontalBorderTop" format="boolean"/>
+        <attr name="horizontalBorderBottom" format="boolean"/>
+    </declare-styleable>
         </resources>
